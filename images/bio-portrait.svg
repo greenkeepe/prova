@@ -1,47 +1,20 @@
 <svg viewBox="0 0 480 600" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#150c1e"/>
-      <stop offset="100%" stop-color="#081018"/>
-    </linearGradient>
-    <linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff2fd3"/>
-      <stop offset="100%" stop-color="#00e5ff"/>
-    </linearGradient>
-    <radialGradient id="spot" cx="50%" cy="30%" r="60%">
-      <stop offset="0%" stop-color="#ff2fd3" stop-opacity="0.28"/>
-      <stop offset="100%" stop-color="#ff2fd3" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-  <rect width="480" height="600" fill="url(#bg)"/>
-  <rect width="480" height="600" fill="url(#spot)"/>
-
-  <!-- silhouette -->
-  <g fill="#05070a">
+  <rect width="480" height="600" fill="#151412"/>
+  <g fill="#0b0b0a">
     <circle cx="240" cy="230" r="78"/>
     <path d="M110 600 C110 440 155 360 240 360 C325 360 370 440 370 600 Z"/>
   </g>
-
-  <!-- headphones -->
-  <g stroke="url(#gg)" stroke-width="8" fill="none" stroke-linecap="round">
+  <g stroke="#ffd400" stroke-width="7" fill="none" stroke-linecap="square">
     <path d="M170 210 a70 70 0 0 1 140 0"/>
-    <rect x="155" y="205" width="26" height="46" rx="10" fill="#0d0d14" stroke="url(#gg)" stroke-width="6"/>
-    <rect x="299" y="205" width="26" height="46" rx="10" fill="#0d0d14" stroke="url(#gg)" stroke-width="6"/>
+    <rect x="155" y="205" width="26" height="46" fill="#0b0b0a" stroke="#ffd400" stroke-width="5"/>
+    <rect x="299" y="205" width="26" height="46" fill="#0b0b0a" stroke="#ffd400" stroke-width="5"/>
   </g>
-
-  <!-- turntable -->
   <g transform="translate(90,470)">
-    <rect x="0" y="0" width="300" height="90" rx="12" fill="#0d0d14" stroke="#23232f" stroke-width="2"/>
-    <circle cx="70" cy="45" r="34" fill="#14141d" stroke="url(#gg)" stroke-width="3"/>
-    <circle cx="70" cy="45" r="6" fill="url(#gg)"/>
-    <rect x="150" y="20" width="120" height="10" rx="5" fill="#23232f"/>
-    <rect x="150" y="40" width="90" height="10" rx="5" fill="#23232f"/>
-    <rect x="150" y="60" width="105" height="10" rx="5" fill="#23232f"/>
-  </g>
-
-  <!-- laser beams -->
-  <g stroke="url(#gg)" stroke-width="2" opacity="0.5">
-    <line x1="0" y1="0" x2="140" y2="180"/>
-    <line x1="480" y1="0" x2="340" y2="180"/>
+    <rect x="0" y="0" width="300" height="90" fill="#0b0b0a" stroke="#2a2925" stroke-width="2"/>
+    <circle cx="70" cy="45" r="34" fill="#151412" stroke="#ffd400" stroke-width="2.5"/>
+    <circle cx="70" cy="45" r="5" fill="#ffd400"/>
+    <rect x="150" y="20" width="120" height="8" fill="#2a2925"/>
+    <rect x="150" y="40" width="90" height="8" fill="#2a2925"/>
+    <rect x="150" y="60" width="105" height="8" fill="#2a2925"/>
   </g>
 </svg>

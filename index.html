@@ -7,15 +7,13 @@
 <meta name="description" content="DJ NOVA — Dj set, eventi, produzioni e booking. Techno, House, Melodic.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="noise"></div>
-
 <header class="navbar" id="navbar">
-  <a href="#home" class="logo">DJ<span>NOVA</span></a>
+  <a href="#home" class="logo">DJ NOVA</a>
   <nav class="nav-links" id="navLinks">
     <a href="#home">Home</a>
     <a href="#bio">Bio</a>
@@ -30,19 +28,42 @@
 </header>
 
 <section id="home" class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-glow"></div>
-  <img src="images/hero-visual.svg" alt="" class="hero-visual" aria-hidden="true">
+  <div class="hero-texture" aria-hidden="true"></div>
   <div class="hero-content">
-    <p class="eyebrow">Techno · House · Melodic</p>
-    <h1>DJ <span class="grad-text">NOVA</span></h1>
-    <p class="hero-sub">Suoni che accendono la pista. Set su misura per club, festival ed eventi privati.</p>
+    <h1>DJ NOVA</h1>
+    <p class="hero-sub">Set techno e house che tengono la pista fino all'ultima luce. Disponibile per club, festival ed eventi privati.</p>
     <div class="hero-actions">
       <a href="#music" class="btn btn-primary">Ascolta i mix</a>
-      <a href="#booking" class="btn btn-ghost">Prenota ora</a>
+      <a href="#booking" class="btn btn-ghost">Prenota la data</a>
     </div>
   </div>
-  <div class="scroll-hint"><span></span></div>
+
+  <div class="ticket-stub" aria-hidden="true">
+    <div class="ticket-top">
+      <span class="ticket-label">Admit one</span>
+      <span class="ticket-label">No. 0412</span>
+    </div>
+    <div class="ticket-body">
+      <span class="ticket-name">DJ NOVA</span>
+      <span class="ticket-genre">Techno / House / Melodic</span>
+    </div>
+    <div class="ticket-perf"></div>
+    <div class="ticket-bottom">
+      <span class="ticket-barcode"></span>
+      <span class="ticket-label">Valid all season</span>
+    </div>
+  </div>
+
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>PROSSIMA DATA A CLUB AURORA, MILANO</span>
+      <span>SET TECHNO E HOUSE SU MISURA</span>
+      <span>BOOKING APERTO PER IL 2027</span>
+      <span>PROSSIMA DATA A CLUB AURORA, MILANO</span>
+      <span>SET TECHNO E HOUSE SU MISURA</span>
+      <span>BOOKING APERTO PER IL 2027</span>
+    </div>
+  </div>
 </section>
 
 <section id="bio" class="section">
@@ -53,8 +74,7 @@
       </div>
     </div>
     <div class="bio-text">
-      <p class="tag">Chi sono</p>
-      <h2>Musica come <span class="grad-text">energia condivisa</span></h2>
+      <h2>Musica come energia condivisa</h2>
       <p>Sono NOVA, DJ e producer da oltre 8 anni sulla scena underground. Il mio sound unisce techno ipnotica e house melodica, costruendo set che raccontano una storia dall'inizio alla fine della serata.</p>
       <p>Ho suonato in club e festival in tutta Italia, portando sul palco un'energia autentica e una selezione musicale curata nei minimi dettagli.</p>
       <div class="stats">
@@ -68,32 +88,31 @@
 
 <section id="eventi" class="section section-alt">
   <div class="section-inner">
-    <p class="tag center">Prossimi appuntamenti</p>
-    <h2 class="center">Dove trovarmi</h2>
+    <h2>Dove suono nelle prossime settimane</h2>
     <div class="events-list">
-      <div class="event-card">
+      <div class="event-row">
         <div class="event-date"><span class="day">12</span><span class="month">OTT</span></div>
         <div class="event-info">
           <h3>Club Aurora — Milano</h3>
-          <p>Notte Techno · Warm-up dalle 23:00</p>
+          <p>Notte Techno, apertura ore 23:00</p>
         </div>
-        <a href="#" class="event-link">Dettagli →</a>
+        <a href="#" class="event-link">Dettagli</a>
       </div>
-      <div class="event-card">
+      <div class="event-row">
         <div class="event-date"><span class="day">26</span><span class="month">OTT</span></div>
         <div class="event-info">
           <h3>Warehouse Festival — Bologna</h3>
-          <p>Main Stage · Set di 90 minuti</p>
+          <p>Main Stage, set di 90 minuti</p>
         </div>
-        <a href="#" class="event-link">Dettagli →</a>
+        <a href="#" class="event-link">Dettagli</a>
       </div>
-      <div class="event-card">
+      <div class="event-row">
         <div class="event-date"><span class="day">09</span><span class="month">NOV</span></div>
         <div class="event-info">
           <h3>Rooftop Sessions — Firenze</h3>
-          <p>Sunset House Set · Ingresso libero</p>
+          <p>Sunset House Set, ingresso libero</p>
         </div>
-        <a href="#" class="event-link">Dettagli →</a>
+        <a href="#" class="event-link">Dettagli</a>
       </div>
     </div>
   </div>
@@ -101,32 +120,31 @@
 
 <section id="music" class="section">
   <div class="section-inner">
-    <p class="tag center">Ultimi lavori</p>
-    <h2 class="center">Music & Mix</h2>
+    <h2>Gli ultimi mix</h2>
     <div class="music-grid">
       <div class="music-card">
         <div class="music-thumb">
           <img src="images/mix-1.svg" alt="Midnight Sessions Vol. 3 cover" loading="lazy">
-          <button class="play-btn" aria-label="Play">▶</button>
+          <button class="play-btn" aria-label="Riproduci Midnight Sessions Vol. 3">▶</button>
         </div>
         <h3>Midnight Sessions Vol. 3</h3>
-        <p>Techno set · 62 min</p>
+        <p>Techno set, 62 min</p>
       </div>
       <div class="music-card">
         <div class="music-thumb">
           <img src="images/mix-2.svg" alt="Sunset Grooves cover" loading="lazy">
-          <button class="play-btn" aria-label="Play">▶</button>
+          <button class="play-btn" aria-label="Riproduci Sunset Grooves">▶</button>
         </div>
         <h3>Sunset Grooves</h3>
-        <p>Melodic House · 48 min</p>
+        <p>Melodic House, 48 min</p>
       </div>
       <div class="music-card">
         <div class="music-thumb">
           <img src="images/mix-3.svg" alt="Warehouse Live Set cover" loading="lazy">
-          <button class="play-btn" aria-label="Play">▶</button>
+          <button class="play-btn" aria-label="Riproduci Warehouse Live Set">▶</button>
         </div>
         <h3>Warehouse Live Set</h3>
-        <p>Live recording · 90 min</p>
+        <p>Live recording, 90 min</p>
       </div>
     </div>
   </div>
@@ -134,13 +152,12 @@
 
 <section id="gallery" class="section section-alt">
   <div class="section-inner">
-    <p class="tag center">Momenti</p>
-    <h2 class="center">Gallery</h2>
+    <h2>Momenti dal vivo</h2>
     <div class="gallery-grid">
-      <img src="images/gallery-1.svg" alt="Live set" loading="lazy">
-      <img src="images/gallery-2.svg" alt="Folla in pista" loading="lazy">
-      <img src="images/gallery-3.svg" alt="Console DJ" loading="lazy">
-      <img src="images/gallery-4.svg" alt="Concerto" loading="lazy">
+      <img src="images/gallery-1.svg" alt="Folla sotto le luci del club" loading="lazy" class="span-2">
+      <img src="images/gallery-2.svg" alt="Fasci laser durante il set" loading="lazy">
+      <img src="images/gallery-3.svg" alt="DJ NOVA in console" loading="lazy">
+      <img src="images/gallery-4.svg" alt="Pubblico a un festival open air" loading="lazy" class="span-2">
     </div>
   </div>
 </section>
@@ -148,12 +165,11 @@
 <section id="booking" class="section booking-section">
   <div class="section-inner booking-grid">
     <div class="booking-text">
-      <p class="tag">Booking</p>
-      <h2>Prenota <span class="grad-text">DJ NOVA</span> per il tuo evento</h2>
+      <h2>Prenota DJ NOVA per il tuo evento</h2>
       <p>Club, matrimoni, eventi privati o festival: raccontami la tua serata e ti rispondo entro 24 ore con disponibilità e proposta.</p>
       <div class="contact-info">
-        <p>📧 booking@djnova.it</p>
-        <p>📱 +39 000 000 0000</p>
+        <p><span>Email</span> booking@djnova.it</p>
+        <p><span>Telefono</span> +39 000 000 0000</p>
       </div>
     </div>
     <form class="booking-form" id="bookingForm">
@@ -167,19 +183,19 @@
       </div>
       <textarea placeholder="Raccontami del tuo evento..." rows="4"></textarea>
       <button type="submit" class="btn btn-primary full">Invia richiesta</button>
-      <p class="form-note" id="formNote"></p>
+      <p class="form-note" id="formNote" role="status"></p>
     </form>
   </div>
 </section>
 
 <footer class="footer">
   <div class="footer-inner">
-    <a href="#home" class="logo">DJ<span>NOVA</span></a>
+    <a href="#home" class="logo">DJ NOVA</a>
     <div class="socials">
-      <a href="#" aria-label="Instagram">Instagram</a>
-      <a href="#" aria-label="SoundCloud">SoundCloud</a>
-      <a href="#" aria-label="Spotify">Spotify</a>
-      <a href="#" aria-label="YouTube">YouTube</a>
+      <a href="#">Instagram</a>
+      <a href="#">SoundCloud</a>
+      <a href="#">Spotify</a>
+      <a href="#">YouTube</a>
     </div>
     <p class="footer-note">© 2026 DJ NOVA — Sito demo a scopo dimostrativo.</p>
   </div>

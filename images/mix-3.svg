@@ -1,16 +1,10 @@
 <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="m3" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff2fd3"/>
-      <stop offset="100%" stop-color="#00e5ff"/>
-    </linearGradient>
-  </defs>
-  <rect width="400" height="400" fill="#0d0d14"/>
-  <circle cx="200" cy="200" r="170" fill="#111119" stroke="url(#m3)" stroke-width="2"/>
-  <circle cx="200" cy="200" r="145" fill="none" stroke="#1c1c26" stroke-width="1.5"/>
-  <circle cx="200" cy="200" r="120" fill="none" stroke="#1c1c26" stroke-width="1.5"/>
-  <circle cx="200" cy="200" r="95" fill="none" stroke="#1c1c26" stroke-width="1.5"/>
-  <circle cx="200" cy="200" r="70" fill="url(#m3)"/>
-  <circle cx="200" cy="200" r="10" fill="#0d0d14"/>
-  <text x="200" y="204" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="13" fill="#0d0d14" font-weight="700" opacity="0.85">LIVE SET</text>
+  <rect width="400" height="400" fill="#0b0b0a"/>
+  <circle cx="200" cy="200" r="170" fill="none" stroke="#f4f3ee" stroke-width="2"/>
+  <circle cx="200" cy="200" r="145" fill="none" stroke="#2a2925" stroke-width="1.5"/>
+  <circle cx="200" cy="200" r="120" fill="none" stroke="#2a2925" stroke-width="1.5"/>
+  <circle cx="200" cy="200" r="95" fill="none" stroke="#2a2925" stroke-width="1.5"/>
+  <circle cx="200" cy="200" r="70" fill="none" stroke="#f4f3ee" stroke-width="3"/>
+  <circle cx="200" cy="200" r="9" fill="#ffd400"/>
+  <text x="200" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="46" fill="#f4f3ee" font-weight="900">W</text>
 </svg>
