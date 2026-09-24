@@ -1,33 +1,28 @@
 <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="gb1" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#1a0d28"/>
-      <stop offset="100%" stop-color="#05070a"/>
-    </linearGradient>
-    <radialGradient id="sp1" cx="30%" cy="15%" r="40%">
-      <stop offset="0%" stop-color="#ff2fd3" stop-opacity="0.55"/>
-      <stop offset="100%" stop-color="#ff2fd3" stop-opacity="0"/>
+    <radialGradient id="sp1" cx="35%" cy="10%" r="45%">
+      <stop offset="0%" stop-color="#ffd400" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ffd400" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="sp2" cx="75%" cy="10%" r="35%">
-      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.45"/>
-      <stop offset="100%" stop-color="#00e5ff" stop-opacity="0"/>
-    </radialGradient>
+    <pattern id="dots1" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="1.2" cy="1.2" r="1.2" fill="#f4f3ee" opacity="0.06"/>
+    </pattern>
   </defs>
-  <rect width="300" height="400" fill="url(#gb1)"/>
+  <rect width="300" height="400" fill="#0b0b0a"/>
+  <rect width="300" height="400" fill="url(#dots1)"/>
   <rect width="300" height="400" fill="url(#sp1)"/>
-  <rect width="300" height="400" fill="url(#sp2)"/>
-  <g stroke="#ffffff" stroke-opacity="0.25" stroke-width="2">
+  <g stroke="#f4f3ee" stroke-opacity="0.2" stroke-width="2">
     <line x1="30" y1="0" x2="80" y2="400"/>
     <line x1="90" y1="0" x2="150" y2="400"/>
     <line x1="200" y1="0" x2="230" y2="400"/>
     <line x1="260" y1="0" x2="180" y2="400"/>
   </g>
-  <g fill="#05070a">
+  <g fill="#0b0b0a" stroke="#0b0b0a">
     <path d="M20 400 C20 320 45 280 70 280 C95 280 120 320 120 400 Z"/>
     <path d="M110 400 C110 300 145 250 180 250 C215 250 250 300 250 400 Z"/>
     <path d="M230 400 C230 330 255 295 275 295 C300 295 300 340 300 400 Z"/>
   </g>
-  <g fill="#05070a">
+  <g fill="#0b0b0a">
     <circle cx="70" cy="265" r="16"/>
     <circle cx="180" cy="235" r="18"/>
     <circle cx="278" cy="280" r="14"/>
