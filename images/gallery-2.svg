@@ -1,0 +1,41 @@
+<svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gb2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#081826"/>
+      <stop offset="100%" stop-color="#05070a"/>
+    </linearGradient>
+    <linearGradient id="beam" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#00e5ff" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#00e5ff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="beam2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff2fd3" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#ff2fd3" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#ff2fd3" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="400" fill="url(#gb2)"/>
+  <g transform="translate(150,0) rotate(15)">
+    <rect x="-6" y="-50" width="12" height="500" fill="url(#beam)"/>
+  </g>
+  <g transform="translate(150,0) rotate(-25)">
+    <rect x="-6" y="-50" width="12" height="500" fill="url(#beam2)"/>
+  </g>
+  <g transform="translate(150,0) rotate(40)">
+    <rect x="-4" y="-50" width="8" height="500" fill="url(#beam)"/>
+  </g>
+  <g fill="#05070a">
+    <rect x="60" y="300" width="180" height="26" rx="6"/>
+    <circle cx="90" cy="290" r="14"/>
+    <circle cx="150" cy="285" r="16"/>
+    <circle cx="210" cy="290" r="14"/>
+  </g>
+  <g fill="#ffffff" opacity="0.8">
+    <circle cx="40" cy="60" r="2"/>
+    <circle cx="90" cy="30" r="2"/>
+    <circle cx="200" cy="50" r="2"/>
+    <circle cx="250" cy="90" r="2"/>
+    <circle cx="140" cy="20" r="2"/>
+  </g>
+</svg>

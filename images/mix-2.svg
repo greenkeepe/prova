@@ -1,0 +1,16 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="m2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5ff"/>
+      <stop offset="100%" stop-color="#00ff9d"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="#0d0d14"/>
+  <circle cx="200" cy="200" r="170" fill="#111119" stroke="url(#m2)" stroke-width="2"/>
+  <circle cx="200" cy="200" r="145" fill="none" stroke="#1c1c26" stroke-width="1.5"/>
+  <circle cx="200" cy="200" r="120" fill="none" stroke="#1c1c26" stroke-width="1.5"/>
+  <circle cx="200" cy="200" r="95" fill="none" stroke="#1c1c26" stroke-width="1.5"/>
+  <circle cx="200" cy="200" r="70" fill="url(#m2)"/>
+  <circle cx="200" cy="200" r="10" fill="#0d0d14"/>
+  <text x="200" y="204" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="13" fill="#0d0d14" font-weight="700" opacity="0.85">SUNSET</text>
+</svg>
