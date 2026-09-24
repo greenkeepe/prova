@@ -1,0 +1,22 @@
+<svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g3bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#171310"/>
+      <stop offset="100%" stop-color="#0a0908"/>
+    </linearGradient>
+    <linearGradient id="g3beam" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E8C468" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#E8C468" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#E8C468" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" fill="url(#g3bg)"/>
+  <g transform="translate(200,0) rotate(12)"><rect x="-4" y="-40" width="8" height="600" fill="url(#g3beam)"/></g>
+  <g transform="translate(200,0) rotate(-20)"><rect x="-3" y="-40" width="6" height="600" fill="url(#g3beam)"/></g>
+  <g fill="#050403">
+    <path d="M30 500 C30 410 60 370 90 370 C120 370 150 410 150 500 Z"/>
+    <path d="M140 500 C140 390 180 340 220 340 C260 340 300 390 300 500 Z"/>
+    <path d="M270 500 C270 420 300 385 325 385 C350 385 370 425 370 500 Z"/>
+  </g>
+  <line x1="0" y1="480" x2="400" y2="480" stroke="#E8C468" stroke-width="0.5" opacity="0.3"/>
+</svg>
