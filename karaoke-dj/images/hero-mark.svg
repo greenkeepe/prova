@@ -1,0 +1,30 @@
+<svg viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8C468"/>
+      <stop offset="100%" stop-color="#A9791F"/>
+    </linearGradient>
+  </defs>
+  <circle cx="260" cy="260" r="248" fill="none" stroke="url(#gold)" stroke-width="0.75" opacity="0.35"/>
+  <circle cx="260" cy="260" r="200" fill="none" stroke="url(#gold)" stroke-width="0.75" opacity="0.25"/>
+  <circle cx="260" cy="260" r="152" fill="none" stroke="url(#gold)" stroke-width="0.75" opacity="0.18"/>
+
+  <g stroke="url(#gold)" stroke-width="2" fill="none" stroke-linecap="round">
+    <rect x="232" y="120" width="56" height="110" rx="28"/>
+    <path d="M195 210 v18 a65 65 0 0 0 130 0 v-18"/>
+    <line x1="260" y1="293" x2="260" y2="335"/>
+    <line x1="222" y1="335" x2="298" y2="335"/>
+  </g>
+
+  <g stroke="url(#gold)" stroke-width="1" opacity="0.7">
+    <path d="M110 260 a150 150 0 0 1 12 -58" fill="none"/>
+    <path d="M410 260 a150 150 0 0 0 -12 -58" fill="none"/>
+  </g>
+
+  <g fill="url(#gold)">
+    <circle cx="80" cy="150" r="2.5"/>
+    <circle cx="440" cy="380" r="2"/>
+    <circle cx="120" cy="410" r="1.8"/>
+    <circle cx="400" cy="120" r="2.2"/>
+  </g>
+</svg>
