@@ -3,6 +3,19 @@
 
 const AUTO_PREDICT_LIMIT = 15; // cap on how many not-started fixtures get an automatic prediction
 
+// Mirrors KNOWN_COMPETITIONS in web/app.py. Used only to prioritize which
+// fixtures get an automatic prediction first: a busy day's schedule spans
+// every league ESPN carries (down to obscure regional friendlies), most of
+// which no data source here covers at all (ClubElo is European clubs only,
+// and we only have standings for leagues someone has synced). Without this,
+// the chronologically-first matches - often exactly those uncovered minor
+// fixtures - would eat the whole auto-predict budget on real games.
+const PRIORITY_COMPETITION_IDS = new Set([
+  "premier-league", "la-liga", "bundesliga", "serie-a", "ligue-1", "mls",
+  "championship", "eredivisie", "primeira-liga", "serie-a-brazil",
+  "champions-league", "european-championship", "world-cup",
+]);
+
 function switchTab(name) {
   document.querySelectorAll(".tab").forEach(t => {
     const active = t.dataset.tab === name;
@@ -138,8 +151,15 @@ async function loadSchedule() {
       .map((ev, i) => ({ ev, i }))
       .filter(({ ev }) => ev.status === "not_started" && ev.home_id && ev.away_id);
 
-    const toAutoPredict = notStarted.slice(0, AUTO_PREDICT_LIMIT);
-    const rest = notStarted.slice(AUTO_PREDICT_LIMIT);
+    // Prioritize fixtures from leagues we actually have coverage for, so
+    // the auto-predict budget isn't spent on friendlies/regional leagues
+    // that will just come back with "nessuna fonte disponibile".
+    const prioritized = [
+      ...notStarted.filter(({ ev }) => PRIORITY_COMPETITION_IDS.has(ev.competition_id)),
+      ...notStarted.filter(({ ev }) => !PRIORITY_COMPETITION_IDS.has(ev.competition_id)),
+    ];
+    const toAutoPredict = prioritized.slice(0, AUTO_PREDICT_LIMIT);
+    const rest = prioritized.slice(AUTO_PREDICT_LIMIT);
 
     toAutoPredict.forEach(({ ev, i }) => {
       const cell = scheduleTable.querySelector(`tr[data-idx="${i}"] .predict-cell`);
@@ -159,7 +179,7 @@ async function loadSchedule() {
         });
         if (cell) cell.innerHTML = predictionBadgeHTML(data);
       } catch (err) {
-        if (cell) cell.innerHTML = `<span class="hint">n/d</span>`;
+        if (cell) cell.innerHTML = `<span class="hint no-data" title="${err.message}">nessun dato</span>`;
       }
     }
 
