@@ -108,6 +108,37 @@ limitata a 20.000 scenari totali (`--max-scenarios` per alzare il
 limite, a costo di tempo di calcolo maggiore: l'algoritmo è O(round ×
 scenari²)).
 
+## Dashboard web
+
+Stessa logica della CLI, esposta come piccola dashboard locale (schede
+Classifica / Pronostico / Sistemi) su Flask, senza build step.
+
+```bash
+pip install -e ".[web]"     # oppure: pip install -r requirements.txt
+football-predictor-web
+```
+
+Apri `http://127.0.0.1:5000`. Variabili d'ambiente opzionali:
+
+```bash
+FOOTBALL_PREDICTOR_HOST=0.0.0.0   # per ascoltare su tutte le interfacce
+FOOTBALL_PREDICTOR_PORT=8080
+FOOTBALL_PREDICTOR_DEBUG=1         # reload automatico durante lo sviluppo
+```
+
+La dashboard usa lo stesso DB SQLite e le stesse funzioni della CLI
+(`db.py`, `sync.py`, `predict.py`, `systems.py`) tramite una API JSON
+sottile in `football_predictor/web/app.py` — nessuna logica duplicata.
+
+**Nota sull'esposizione online.** Di default il server ascolta solo su
+`127.0.0.1` (accessibile solo dalla stessa macchina). Per renderlo
+raggiungibile da altri dispositivi sulla tua rete, avvialo con
+`FOOTBALL_PREDICTOR_HOST=0.0.0.0`. Per pubblicarlo su un URL pubblico su
+internet serve un hosting (Render, Fly.io, un VPS, ecc.) — il server
+Flask integrato (`app.run(...)`) è pensato per uso locale/di sviluppo:
+per un vero deploy pubblico va messo dietro un server WSGI di produzione
+(es. gunicorn) e un hosting a tua scelta.
+
 ## Test
 
 ```bash
@@ -130,6 +161,10 @@ football_predictor/
   predict.py          stima probabilità 1X2 (cascata di fonti)
   systems.py          generatore sistemi integrale/ridotto + verifica
   cli.py              comandi da terminale
+  web/
+    app.py            API Flask (thin wrapper sulle stesse funzioni)
+    templates/index.html
+    static/style.css, app.js
 tests/
   test_predict.py
   test_systems.py
