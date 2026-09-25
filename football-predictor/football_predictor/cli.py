@@ -32,8 +32,8 @@ def cmd_sync_standings(args: argparse.Namespace) -> None:
 def cmd_sync_schedule(args: argparse.Namespace) -> None:
     with db.connect(args.db) as conn:
         db.init_db(conn)
-        rows = sync.sync_daily_schedule(conn, args.date)
-        print(f"Synced {rows} matches for {args.date or 'today'}")
+        events = sync.sync_daily_schedule(conn, args.date)
+        print(f"Synced {len(events)} matches for {args.date or 'today'}")
 
 
 def cmd_standings(args: argparse.Namespace) -> None:

@@ -86,15 +86,22 @@ def sync_standings(conn: sqlite3.Connection, season_id: str) -> int:
     return rows
 
 
-def sync_daily_schedule(conn: sqlite3.Connection, date: str | None = None) -> int:
-    """Fetch all matches for a date (default: today) across every league."""
+def sync_daily_schedule(conn: sqlite3.Connection, date: str | None = None) -> list[dict]:
+    """Fetch all matches for a date (default: today) across every league.
+
+    Returns the parsed event list (not just a count) so callers - the web
+    dashboard in particular - can render it directly without a second
+    round trip through the DB.
+    """
     result = call("get_daily_schedule", date=date)
-    rows = 0
+    events_out = []
     for event in result.data.get("events", []):
         competitors = {c.get("qualifier"): c for c in event.get("competitors", [])}
         home = competitors.get("home", {}).get("team", {}) or {}
         away = competitors.get("away", {}).get("team", {}) or {}
         scores = event.get("scores", {}) or {}
+        competition_id = (event.get("competition") or {}).get("id")
+        season_id = (event.get("season") or {}).get("id")
         conn.execute(
             """
             INSERT INTO matches (
@@ -109,19 +116,25 @@ def sync_daily_schedule(conn: sqlite3.Connection, date: str | None = None) -> in
                 synced_at = excluded.synced_at
             """,
             (
-                event.get("id"),
-                (event.get("competition") or {}).get("id"),
-                (event.get("season") or {}).get("id"),
-                event.get("start_time"),
-                event.get("status"),
+                event.get("id"), competition_id, season_id,
+                event.get("start_time"), event.get("status"),
                 home.get("id"), home.get("name"),
                 away.get("id"), away.get("name"),
                 scores.get("home"), scores.get("away"),
             ),
         )
-        rows += 1
-    db.log_sync(conn, "sync_daily_schedule", f"{date or 'today'}: {rows} rows ({result.warnings or 'ok'})")
-    return rows
+        events_out.append({
+            "event_id": event.get("id"),
+            "competition_id": competition_id,
+            "season_id": season_id,
+            "start_time": event.get("start_time"),
+            "status": event.get("status"),
+            "home_id": home.get("id"), "home_name": home.get("name"),
+            "away_id": away.get("id"), "away_name": away.get("name"),
+            "home_score": scores.get("home"), "away_score": scores.get("away"),
+        })
+    db.log_sync(conn, "sync_daily_schedule", f"{date or 'today'}: {len(events_out)} rows ({result.warnings or 'ok'})")
+    return events_out
 
 
 def sync_team_strength(conn: sqlite3.Connection, team_id: str, league_slug: str | None = None) -> dict | None:

@@ -10,7 +10,8 @@
   <header class="topbar">
     <div class="topbar__brand">⚽ Football Predictor</div>
     <nav class="tabs" role="tablist">
-      <button class="tab is-active" data-tab="classifica" role="tab" aria-selected="true">Classifica</button>
+      <button class="tab is-active" data-tab="oggi" role="tab" aria-selected="true">Oggi</button>
+      <button class="tab" data-tab="classifica" role="tab" aria-selected="false">Classifica</button>
       <button class="tab" data-tab="pronostico" role="tab" aria-selected="false">Pronostico</button>
       <button class="tab" data-tab="sistemi" role="tab" aria-selected="false">Sistemi</button>
     </nav>
@@ -18,29 +19,37 @@
 
   <main class="container">
 
-    <section id="panel-classifica" class="panel is-active" role="tabpanel">
+    <section id="panel-oggi" class="panel is-active" role="tabpanel">
+      <div class="card">
+        <div class="card__header">
+          <h2>Partite di oggi</h2>
+          <div class="card__header-actions">
+            <input type="date" id="schedule-date">
+            <button id="btn-reload-schedule">Aggiorna</button>
+          </div>
+        </div>
+        <p id="schedule-status" class="hint">Caricamento partite in corso...</p>
+        <div id="schedule-table" class="table-wrap"></div>
+      </div>
+    </section>
+
+    <section id="panel-classifica" class="panel" role="tabpanel">
       <div class="card">
         <h2>Sincronizza classifica</h2>
         <form id="form-sync-standings" class="form-row">
           <label>Campionato
-            <input type="text" name="competition" placeholder="premier-league" required>
+            <select name="competition" id="competition-select" required></select>
           </label>
-          <label>Stagione <span class="hint">(opzionale)</span>
-            <input type="text" name="season" placeholder="premier-league-2026">
+          <label>Stagione <span class="hint">(opzionale, es. premier-league-2025)</span>
+            <input type="text" name="season" placeholder="stagione corrente se vuoto">
           </label>
-          <button type="submit">Sincronizza</button>
+          <button type="submit">Sincronizza e mostra</button>
         </form>
         <p id="sync-status" class="status"></p>
       </div>
 
       <div class="card">
-        <h2>Classifica salvata</h2>
-        <form id="form-view-standings" class="form-row">
-          <label>Season ID
-            <input type="text" name="season" placeholder="premier-league-2026" required>
-          </label>
-          <button type="submit">Mostra</button>
-        </form>
+        <h2>Classifica</h2>
         <div id="standings-table" class="table-wrap"></div>
       </div>
     </section>

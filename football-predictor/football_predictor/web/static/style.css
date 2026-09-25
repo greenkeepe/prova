@@ -83,6 +83,18 @@ body {
   font-size: 1.05rem;
 }
 
+.card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+.card__header h2 { margin: 0; }
+.card__header-actions { display: flex; gap: 0.5rem; align-items: center; }
+.card__header-actions input[type="date"] { padding: 0.4rem 0.6rem; }
+
 .form-row, .form-grid {
   display: grid;
   gap: 0.9rem;
@@ -185,6 +197,48 @@ tr:hover td { background: var(--surface-2); }
 }
 .badge.low { background: #3a2e17; color: #facc15; }
 .badge.very_low { background: #3a1e17; color: #fb923c; }
+
+.predict-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  min-width: 190px;
+}
+
+.mini-prob-bar {
+  display: flex;
+  width: 70px;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.mini-prob-bar .p-home { background: var(--accent); }
+.mini-prob-bar .p-draw { background: #facc15; }
+.mini-prob-bar .p-away { background: #fb923c; }
+.mini-prob-text { font-size: 0.75rem; color: var(--text-dim); white-space: nowrap; }
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.btn-inline {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.78rem;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+.btn-inline:hover { border-color: var(--accent); }
 
 .error-box {
   color: var(--danger);

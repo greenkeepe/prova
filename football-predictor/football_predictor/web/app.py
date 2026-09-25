@@ -19,6 +19,26 @@ DISCLAIMER = (
     "Gioca responsabilmente e solo cio' che puoi permetterti di perdere."
 )
 
+# The full slug list from references/api-reference.md "Supported Leagues".
+# Exposed as a dropdown so the UI can never send a typo'd competition_id
+# (the "serie a" vs "serie-a" class of bug) the way a free-text field can.
+KNOWN_COMPETITIONS = [
+    {"id": "premier-league", "name": "Premier League"},
+    {"id": "la-liga", "name": "La Liga"},
+    {"id": "bundesliga", "name": "Bundesliga"},
+    {"id": "serie-a", "name": "Serie A"},
+    {"id": "ligue-1", "name": "Ligue 1"},
+    {"id": "mls", "name": "MLS"},
+    {"id": "championship", "name": "Championship"},
+    {"id": "eredivisie", "name": "Eredivisie"},
+    {"id": "primeira-liga", "name": "Primeira Liga"},
+    {"id": "serie-a-brazil", "name": "Serie A Brazil"},
+    {"id": "champions-league", "name": "Champions League"},
+    {"id": "european-championship", "name": "European Championship"},
+    {"id": "world-cup", "name": "World Cup"},
+]
+COMPETITION_NAMES = {c["id"]: c["name"] for c in KNOWN_COMPETITIONS}
+
 
 def create_app(db_path: str | None = None) -> Flask:
     app = Flask(__name__)
@@ -28,9 +48,41 @@ def create_app(db_path: str | None = None) -> Flask:
         conn_ctx = db.connect(app.config["DB_PATH"])
         return conn_ctx
 
+    @app.errorhandler(Exception)
+    def handle_unexpected_error(exc):
+        # Flask's default unhandled-exception page is HTML, which our
+        # frontend can't parse - it would just show a bare "Errore 500"
+        # with no explanation. Always answer JSON instead so the real
+        # cause reaches the UI.
+        app.logger.exception("Unhandled error in %s", request.path)
+        return jsonify({"error": str(exc) or exc.__class__.__name__}), 500
+
     @app.route("/")
     def index():
-        return render_template("index.html", disclaimer=DISCLAIMER)
+        return render_template("index.html", disclaimer=DISCLAIMER, competitions=KNOWN_COMPETITIONS)
+
+    @app.route("/api/competitions")
+    def api_competitions():
+        return jsonify(KNOWN_COMPETITIONS)
+
+    @app.route("/api/schedule")
+    def api_schedule():
+        date = request.args.get("date") or None
+        try:
+            with get_conn() as conn:
+                db.init_db(conn)
+                events = sync.sync_daily_schedule(conn, date)
+        except SportsSkillsNotInstalled as exc:
+            return jsonify({"error": str(exc)}), 500
+        except SportsSkillsError as exc:
+            return jsonify({"error": f"fonte dati non raggiungibile: {exc}"}), 502
+
+        events.sort(key=lambda e: e.get("start_time") or "")
+        for event in events:
+            event["competition_name"] = COMPETITION_NAMES.get(
+                event.get("competition_id"), event.get("competition_id")
+            )
+        return jsonify(events)
 
     @app.route("/api/standings")
     def api_standings():
@@ -63,6 +115,10 @@ def create_app(db_path: str | None = None) -> Flask:
             return jsonify({"error": str(exc)}), 500
         except SportsSkillsError as exc:
             return jsonify({"error": f"fonte dati non raggiungibile: {exc}"}), 502
+        except RuntimeError as exc:
+            # e.g. an unknown/mistyped competition slug - a client input
+            # problem, not a server fault.
+            return jsonify({"error": str(exc)}), 400
         return jsonify({"season_id": season_id, "rows": rows})
 
     @app.route("/api/predict", methods=["POST"])
