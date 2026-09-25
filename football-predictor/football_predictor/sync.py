@@ -137,6 +137,37 @@ def sync_daily_schedule(conn: sqlite3.Connection, date: str | None = None) -> li
     return events_out
 
 
+def fetch_season_schedule(season_id: str) -> list[dict]:
+    """Full schedule for a season - read-only, nothing persisted to the DB.
+
+    Used to let someone browse a competition's fixtures/results, as
+    opposed to sync_daily_schedule (today only, and upserted into
+    `matches` for the "Oggi" tab / predict fallback). Note: when the
+    underlying source falls back to openfootball, team ids and event ids
+    come back empty ("") - a event/team-id-dependent call (predictions,
+    head-to-head, event stats) can't be made for those fixtures, and
+    callers need to handle that rather than assume ids are always present.
+    """
+    result = call("get_season_schedule", season_id=season_id)
+    events_out = []
+    for event in result.data.get("schedules", []):
+        competitors = {c.get("qualifier"): c for c in event.get("competitors", [])}
+        home = competitors.get("home", {}).get("team", {}) or {}
+        away = competitors.get("away", {}).get("team", {}) or {}
+        scores = event.get("scores", {}) or {}
+        events_out.append({
+            "event_id": event.get("id") or None,
+            "competition_id": (event.get("competition") or {}).get("id"),
+            "season_id": (event.get("season") or {}).get("id"),
+            "start_time": event.get("start_time"),
+            "status": event.get("status"),
+            "home_id": home.get("id") or None, "home_name": home.get("name"),
+            "away_id": away.get("id") or None, "away_name": away.get("name"),
+            "home_score": scores.get("home"), "away_score": scores.get("away"),
+        })
+    return events_out
+
+
 def sync_team_strength(conn: sqlite3.Connection, team_id: str, league_slug: str | None = None) -> dict | None:
     """Fetch and store the current Elo rating for a single team."""
     result = call("get_team_strength", team_id=team_id, league_slug=league_slug)

@@ -11,6 +11,7 @@
     <div class="topbar__brand">⚽ Football Predictor</div>
     <nav class="tabs" role="tablist">
       <button class="tab is-active" data-tab="oggi" role="tab" aria-selected="true">Oggi</button>
+      <button class="tab" data-tab="eventi" role="tab" aria-selected="false">Eventi</button>
       <button class="tab" data-tab="classifica" role="tab" aria-selected="false">Classifica</button>
       <button class="tab" data-tab="pronostico" role="tab" aria-selected="false">Pronostico</button>
       <button class="tab" data-tab="sistemi" role="tab" aria-selected="false">Sistemi</button>
@@ -30,6 +31,39 @@
         </div>
         <p id="schedule-status" class="hint">Caricamento partite in corso...</p>
         <div id="schedule-table" class="table-wrap"></div>
+      </div>
+    </section>
+
+    <section id="panel-eventi" class="panel" role="tabpanel">
+      <div class="card">
+        <h2>Cerca eventi</h2>
+        <form id="form-events" class="form-row">
+          <label>Sport
+            <select id="sport-select" disabled>
+              <option value="football">⚽ Calcio</option>
+            </select>
+          </label>
+          <label>Campionato
+            <select name="competition" id="events-competition-select" required></select>
+          </label>
+          <button type="submit">Cerca</button>
+        </form>
+        <p id="events-status" class="hint"></p>
+      </div>
+
+      <div id="events-live-card" class="card" style="display:none">
+        <h2>In corso</h2>
+        <div id="events-live" class="table-wrap"></div>
+      </div>
+
+      <div id="events-upcoming-card" class="card" style="display:none">
+        <h2>Prossime partite</h2>
+        <div id="events-upcoming" class="table-wrap scroll-list"></div>
+      </div>
+
+      <div id="events-recent-card" class="card" style="display:none">
+        <h2>Risultati recenti</h2>
+        <div id="events-recent" class="table-wrap scroll-list"></div>
       </div>
     </section>
 
@@ -108,6 +142,16 @@
   </main>
 
   <footer class="disclaimer">{{ disclaimer }}</footer>
+
+  <div id="event-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-card__header">
+        <h3 id="modal-title">Dettaglio partita</h3>
+        <button id="modal-close" class="btn-inline" aria-label="Chiudi">✕</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
 
   <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>

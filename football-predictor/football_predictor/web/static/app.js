@@ -88,6 +88,21 @@ function predictionBadgeHTML(data) {
     <span class="badge ${data.confidence}">${data.confidence}</span>`;
 }
 
+function fullPredictionCardHTML(data) {
+  const pct = (x) => Math.round(x * 1000) / 10;
+  return `
+    <div class="result-card">
+      <strong>${data.home_team}</strong> vs <strong>${data.away_team}</strong>
+      <div class="prob-bar">
+        <span class="p-home" style="width:${pct(data.p_home)}%">1: ${pct(data.p_home)}%</span>
+        <span class="p-draw" style="width:${pct(data.p_draw)}%">X: ${pct(data.p_draw)}%</span>
+        <span class="p-away" style="width:${pct(data.p_away)}%">2: ${pct(data.p_away)}%</span>
+      </div>
+      <span class="badge ${data.confidence}">${data.model} · confidenza ${data.confidence}</span>
+      <p class="hint">${data.detail || ""}</p>
+    </div>`;
+}
+
 // --- Oggi ----------------------------------------------------------------
 
 const scheduleTable = document.getElementById("schedule-table");
@@ -216,6 +231,188 @@ async function loadSchedule() {
 
 btnReloadSchedule.addEventListener("click", loadSchedule);
 
+// --- Eventi (campionato -> eventi -> dettaglio) --------------------------
+
+const eventsForm = document.getElementById("form-events");
+const eventsStatus = document.getElementById("events-status");
+const eventsLiveCard = document.getElementById("events-live-card");
+const eventsUpcomingCard = document.getElementById("events-upcoming-card");
+const eventsRecentCard = document.getElementById("events-recent-card");
+const eventsLive = document.getElementById("events-live");
+const eventsUpcoming = document.getElementById("events-upcoming");
+const eventsRecent = document.getElementById("events-recent");
+
+const modalOverlay = document.getElementById("event-modal");
+const modalTitle = document.getElementById("modal-title");
+const modalBody = document.getElementById("modal-body");
+document.getElementById("modal-close").addEventListener("click", closeModal);
+modalOverlay.addEventListener("click", (e) => { if (e.target === modalOverlay) closeModal(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
+function closeModal() {
+  modalOverlay.classList.add("hidden");
+}
+
+function openModal(title) {
+  modalTitle.textContent = title;
+  modalBody.innerHTML = `<p class="hint">Caricamento dettagli...</p>`;
+  modalOverlay.classList.remove("hidden");
+}
+
+function eventRowHTML(ev, idx, { showScore }) {
+  const scoreOrStatus = showScore
+    ? `<strong>${ev.home_score ?? "-"} - ${ev.away_score ?? "-"}</strong>`
+    : `<span class="status-pill ${ev.status === "live" || ev.status === "halftime" ? "live" : ""}">${STATUS_LABEL[ev.status] || ev.status || "-"}</span>`;
+  return `
+    <tr class="row-clickable" data-list-idx="${idx}">
+      <td>${formatKickoff(ev.start_time)}</td>
+      <td>${ev.home_name || "?"}</td>
+      <td>${ev.away_name || "?"}</td>
+      <td>${scoreOrStatus}</td>
+    </tr>`;
+}
+
+function renderEventList(container, list, listName, { showScore }) {
+  if (!list.length) {
+    container.innerHTML = "";
+    return false;
+  }
+  const rows = list.map((ev, i) => eventRowHTML(ev, i, { showScore })).join("");
+  container.innerHTML = `
+    <table>
+      <thead><tr><th>Quando</th><th>Casa</th><th>Ospite</th><th>${showScore ? "Risultato" : "Stato"}</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  container.querySelectorAll("tr.row-clickable").forEach(tr => {
+    tr.addEventListener("click", () => openEventDetail(list[Number(tr.dataset.listIdx)]));
+  });
+  return true;
+}
+
+async function openEventDetail(ev) {
+  openModal(`${ev.home_name || "?"} vs ${ev.away_name || "?"}`);
+  try {
+    const data = await postJSON("/api/event-detail", {
+      event_id: ev.event_id, status: ev.status, start_time: ev.start_time,
+      home_id: ev.home_id, away_id: ev.away_id,
+      home_name: ev.home_name, away_name: ev.away_name,
+      season_id: ev.season_id,
+    });
+    modalBody.innerHTML = data.kind === "report" ? reportDetailHTML(ev, data) : previewDetailHTML(ev, data);
+  } catch (err) {
+    modalBody.innerHTML = `<p class="error-box">${err.message}</p>`;
+  }
+}
+
+function previewDetailHTML(ev, data) {
+  const parts = [];
+
+  parts.push(`<div class="detail-section"><h4>Pronostico</h4>${
+    data.prediction ? fullPredictionCardHTML(data.prediction) : `<p class="hint">Nessuna fonte disponibile per questa partita.</p>`
+  }</div>`);
+
+  if (data.head_to_head) {
+    const s = data.head_to_head.summary || {};
+    const recent = (data.head_to_head.recent || []).map(m =>
+      `<div>${(m.date || "").slice(0, 10)} — ${m.home_team} ${m.home_score}-${m.away_score} ${m.away_team}</div>`
+    ).join("");
+    parts.push(`<div class="detail-section"><h4>Testa a testa</h4>
+      <p class="hint">${s.total_meetings ?? "?"} precedenti nella stessa divisione</p>
+      <div class="timeline-list">${recent}</div>
+    </div>`);
+  }
+
+  if (data.team_strength) {
+    const teams = data.team_strength.teams || [];
+    const rows = teams.map(t => `<div>${t.matched_as || "?"} — Elo ${t.elo ?? "?"} (rank ${t.rank ?? "?"})</div>`).join("");
+    const fav = data.team_strength.favorite ? `<p class="hint">Favorita: ${data.team_strength.favorite}</p>` : "";
+    parts.push(`<div class="detail-section"><h4>Forza Elo (ClubElo)</h4>
+      <div class="timeline-list">${rows}</div>${fav}
+    </div>`);
+  }
+
+  if (!data.head_to_head && !data.team_strength && !data.prediction) {
+    parts.push(`<p class="hint">Nessun dato aggiuntivo disponibile: squadre/campionato non coperti dalle fonti gratuite (tipico per leghe minori o nazionali non europee).</p>`);
+  }
+
+  return parts.join("");
+}
+
+function reportDetailHTML(ev, data) {
+  const parts = [];
+  parts.push(`<div class="detail-section"><h4>Risultato finale</h4>
+    <p><strong>${ev.home_name} ${ev.home_score ?? "-"} - ${ev.away_score ?? "-"} ${ev.away_name}</strong>
+    <span class="status-pill">${STATUS_LABEL[ev.status] || ev.status}</span></p>
+  </div>`);
+
+  if (data.stored_prediction) {
+    const p = data.stored_prediction;
+    const pct = (x) => Math.round(x * 1000) / 10;
+    parts.push(`<div class="detail-section"><h4>Pronostico calcolato prima della partita</h4>
+      <p class="hint">1: ${pct(p.p_home)}% · X: ${pct(p.p_draw)}% · 2: ${pct(p.p_away)}% (${p.model}, confidenza ${p.confidence})</p>
+    </div>`);
+  }
+
+  if (data.statistics) {
+    const byQualifier = Object.fromEntries(data.statistics.map(t => [t.qualifier, t.statistics || {}]));
+    const home = byQualifier.home || {};
+    const away = byQualifier.away || {};
+    const keys = Array.from(new Set([...Object.keys(home), ...Object.keys(away)]));
+    const rows = keys.map(k => `
+      <div class="stat-row"><span>${home[k] ?? "-"}</span><span class="stat-label">${k}</span><span class="stat-away">${away[k] ?? "-"}</span></div>
+    `).join("");
+    parts.push(`<div class="detail-section"><h4>Statistiche</h4>${rows}</div>`);
+  }
+
+  if (data.timeline) {
+    const rows = data.timeline.map(t =>
+      `<div><span class="minute">${t.minute ?? "?"}'</span> ${t.type || "evento"} — ${t.team?.name || ""}</div>`
+    ).join("");
+    parts.push(`<div class="detail-section"><h4>Tabellino</h4><div class="timeline-list">${rows}</div></div>`);
+  }
+
+  if (!data.statistics && !data.timeline && !data.stored_prediction) {
+    parts.push(`<p class="hint">Nessun dettaglio aggiuntivo disponibile per questa partita.</p>`);
+  }
+
+  return parts.join("");
+}
+
+eventsForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const fd = new FormData(eventsForm);
+  const btn = eventsForm.querySelector("button");
+  btn.disabled = true;
+  eventsStatus.textContent = "Ricerca in corso (una stagione intera può richiedere qualche secondo)...";
+  eventsStatus.className = "hint";
+  [eventsLiveCard, eventsUpcomingCard, eventsRecentCard].forEach(c => c.style.display = "none");
+  try {
+    const data = await getJSON(`/api/events?competition=${encodeURIComponent(fd.get("competition"))}`);
+    const events = data.events || [];
+    if (!events.length) {
+      eventsStatus.textContent = `Nessun evento trovato per ${data.season_id}.`;
+      return;
+    }
+    const live = events.filter(ev => ev.status === "live" || ev.status === "halftime");
+    const upcoming = events.filter(ev => ev.status === "not_started")
+      .sort((a, b) => (a.start_time || "").localeCompare(b.start_time || ""));
+    const recent = events.filter(ev => ev.status === "closed")
+      .sort((a, b) => (b.start_time || "").localeCompare(a.start_time || ""))
+      .slice(0, 15);
+
+    eventsStatus.textContent = `${events.length} eventi trovati per ${data.season_id} (${live.length} in corso, ${upcoming.length} da giocare, ${events.length - live.length - upcoming.length} finite).`;
+
+    if (renderEventList(eventsLive, live, "live", { showScore: true })) eventsLiveCard.style.display = "";
+    if (renderEventList(eventsUpcoming, upcoming, "upcoming", { showScore: false })) eventsUpcomingCard.style.display = "";
+    if (renderEventList(eventsRecent, recent, "recent", { showScore: true })) eventsRecentCard.style.display = "";
+  } catch (err) {
+    eventsStatus.textContent = err.message;
+    eventsStatus.className = "status err";
+  } finally {
+    btn.disabled = false;
+  }
+});
+
 // --- Classifica ------------------------------------------------------
 
 const competitionSelect = document.getElementById("competition-select");
@@ -224,12 +421,13 @@ const syncStatus = document.getElementById("sync-status");
 const standingsTable = document.getElementById("standings-table");
 
 async function loadCompetitions() {
+  const selects = [competitionSelect, document.getElementById("events-competition-select")].filter(Boolean);
   try {
     const competitions = await getJSON("/api/competitions");
-    competitionSelect.innerHTML = competitions
-      .map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+    const optionsHTML = competitions.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+    selects.forEach(sel => { sel.innerHTML = optionsHTML; });
   } catch (err) {
-    competitionSelect.innerHTML = `<option value="">Errore caricamento campionati</option>`;
+    selects.forEach(sel => { sel.innerHTML = `<option value="">Errore caricamento campionati</option>`; });
   }
 }
 
@@ -274,18 +472,7 @@ predictForm.addEventListener("submit", async (e) => {
       home_id: fd.get("home_id"), away_id: fd.get("away_id"),
       season: fd.get("season"),
     });
-    const pct = (x) => Math.round(x * 1000) / 10;
-    predictResult.innerHTML = `
-      <div class="result-card">
-        <strong>${data.home_team}</strong> vs <strong>${data.away_team}</strong>
-        <div class="prob-bar">
-          <span class="p-home" style="width:${pct(data.p_home)}%">1: ${pct(data.p_home)}%</span>
-          <span class="p-draw" style="width:${pct(data.p_draw)}%">X: ${pct(data.p_draw)}%</span>
-          <span class="p-away" style="width:${pct(data.p_away)}%">2: ${pct(data.p_away)}%</span>
-        </div>
-        <span class="badge ${data.confidence}">${data.model} · confidenza ${data.confidence}</span>
-        <p class="hint">${data.detail || ""}</p>
-      </div>`;
+    predictResult.innerHTML = fullPredictionCardHTML(data);
   } catch (err) {
     predictResult.innerHTML = `<p class="error-box">${err.message}</p>`;
   } finally {

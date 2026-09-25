@@ -11,7 +11,7 @@ import os
 
 from flask import Flask, jsonify, render_template, request
 
-from .. import db, predict, systems, sync
+from .. import db, detail, predict, systems, sync
 from ..sports_client import SportsSkillsError, SportsSkillsNotInstalled
 
 DISCLAIMER = (
@@ -83,6 +83,57 @@ def create_app(db_path: str | None = None) -> Flask:
                 event.get("competition_id"), event.get("competition_id")
             )
         return jsonify(events)
+
+    @app.route("/api/events")
+    def api_events():
+        competition = request.args.get("competition", "").strip()
+        season = request.args.get("season", "").strip() or None
+        if not competition:
+            return jsonify({"error": "parametro 'competition' richiesto"}), 400
+        try:
+            with get_conn() as conn:
+                db.init_db(conn)
+                season_id = sync.sync_competition_season(conn, competition, season)
+                events = sync.fetch_season_schedule(season_id)
+        except SportsSkillsNotInstalled as exc:
+            return jsonify({"error": str(exc)}), 500
+        except SportsSkillsError as exc:
+            return jsonify({"error": f"fonte dati non raggiungibile: {exc}"}), 502
+        except RuntimeError as exc:
+            return jsonify({"error": str(exc)}), 400
+
+        events.sort(key=lambda e: e.get("start_time") or "")
+        return jsonify({"season_id": season_id, "events": events})
+
+    @app.route("/api/event-detail", methods=["POST"])
+    def api_event_detail():
+        payload = request.get_json(force=True, silent=True) or {}
+        status = payload.get("status")
+        with get_conn() as conn:
+            db.init_db(conn)
+            if status in ("closed", "live", "halftime"):
+                result = detail.match_report(conn, payload.get("event_id"))
+            else:
+                home_id = payload.get("home_id") or None
+                away_id = payload.get("away_id") or None
+                result = detail.match_preview(
+                    conn, home_id, away_id,
+                    str(payload.get("home_name") or ""), str(payload.get("away_name") or ""),
+                    season_id=payload.get("season_id"),
+                )
+                prediction = result.get("prediction")
+                if prediction:
+                    conn.execute(
+                        "INSERT INTO predictions (event_id, home_team, away_team, match_date, "
+                        "p_home, p_draw, p_away, model, confidence, created_at) "
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))",
+                        (
+                            payload.get("event_id"), prediction["home_team"], prediction["away_team"],
+                            payload.get("start_time"), prediction["p_home"], prediction["p_draw"],
+                            prediction["p_away"], prediction["model"], prediction["confidence"],
+                        ),
+                    )
+        return jsonify(result)
 
     @app.route("/api/standings")
     def api_standings():
