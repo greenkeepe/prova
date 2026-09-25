@@ -133,11 +133,45 @@ sottile in `football_predictor/web/app.py` — nessuna logica duplicata.
 **Nota sull'esposizione online.** Di default il server ascolta solo su
 `127.0.0.1` (accessibile solo dalla stessa macchina). Per renderlo
 raggiungibile da altri dispositivi sulla tua rete, avvialo con
-`FOOTBALL_PREDICTOR_HOST=0.0.0.0`. Per pubblicarlo su un URL pubblico su
-internet serve un hosting (Render, Fly.io, un VPS, ecc.) — il server
-Flask integrato (`app.run(...)`) è pensato per uso locale/di sviluppo:
-per un vero deploy pubblico va messo dietro un server WSGI di produzione
-(es. gunicorn) e un hosting a tua scelta.
+`FOOTBALL_PREDICTOR_HOST=0.0.0.0`. Per un URL pubblico vedi la sezione
+seguente.
+
+## Deploy online (gratis, Render)
+
+Il repo include `render.yaml` alla radice, pronto per il piano free di
+[Render](https://render.com): build con `pip install -e ".[web]"` (include
+`gunicorn`), avvio con `gunicorn ... football_predictor.web.app:create_app()`.
+
+Ho scelto Render perché il suo piano free consente traffico in uscita
+generico (necessario: l'app deve chiamare ESPN/ClubElo/Understat/ecc.),
+a differenza di alternative come PythonAnywhere free (che limita l'uscita
+a un elenco di domini permessi, che non include quelle fonti). Non
+richiede carta di credito per il piano free.
+
+**Deploy in 3 passi** (richiede un account Render collegato al tuo
+GitHub — passaggio che solo tu puoi completare, essendo un login/OAuth
+interattivo):
+
+1. Vai su [dashboard.render.com/blueprints](https://dashboard.render.com/blueprints)
+   → *New Blueprint Instance* → collega il repository GitHub
+   `greenkeepe/prova` (branch `claude/practical-wozniak-7imjf9`, o `main`
+   dopo il merge).
+2. Render rileva automaticamente `render.yaml` e propone il servizio
+   `football-predictor` sul piano Free → *Apply*.
+3. Al termine del build (2-3 minuti) l'app è live su
+   `https://football-predictor-xxxx.onrender.com`.
+
+**Limiti del piano free da sapere:**
+- **Storage effimero**: nessun disco persistente sul piano free → il DB
+  SQLite (con le classifiche sincronizzate) viene azzerato ad ogni
+  riavvio/redeploy. Basta rilanciare la sincronizzazione dalla dashboard
+  dopo un riavvio.
+- **Spin down per inattività**: dopo ~15 minuti senza richieste il
+  servizio si ferma e la richiesta successiva impiega fino a ~1 minuto
+  per il cold start.
+- Per un uso più serio (storage persistente, niente spin down) serve un
+  piano a pagamento su Render, o un altro hosting — la configurazione in
+  `render.yaml` resta comunque valida come punto di partenza.
 
 ## Test
 

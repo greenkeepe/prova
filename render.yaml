@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: football-predictor
+    runtime: python
+    rootDir: football-predictor
+    plan: free
+    buildCommand: "pip install -e \".[web]\""
+    startCommand: "gunicorn -w 2 -b 0.0.0.0:$PORT 'football_predictor.web.app:create_app()'"
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
