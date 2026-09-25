@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "football-predictor"
+version = "0.1.0"
+description = "Statistiche calcistiche reali, pronostici 1X2 e generatore di sistemi (integrale/ridotto)"
+requires-python = ">=3.10"
+dependencies = [
+    "sports-skills>=0.33.0",
+    "numpy>=1.24",
+]
+
+[project.scripts]
+football-predictor = "football_predictor.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["football_predictor*"]

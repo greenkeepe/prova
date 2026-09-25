@@ -1,3 +1,6 @@
 .claude/settings.local.json
 __pycache__/
 *.pyc
+.pytest_cache/
+*.egg-info/
+football-predictor/*.db
